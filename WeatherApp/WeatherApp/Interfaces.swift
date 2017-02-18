@@ -6,7 +6,23 @@
 //  Copyright © 2017 Oleksiy Bilyi. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+struct WeatherCondition {
+    
+    var sunrise : String = ""
+    var sunset : String = ""
+    var temperature : Double?
+    var humidity: Int?
+    var pressure: Double?
+    var windSpeed : Double?
+    var windName : String = ""
+    var windDirection : String = ""
+    var clouds : String = ""
+    var weather : String = ""
+    var weatherIcon : UIImage?
+    
+}
 
 enum Day: String {
     case Monday = "Monday"

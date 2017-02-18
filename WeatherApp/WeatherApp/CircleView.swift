@@ -19,47 +19,63 @@ import UIKit
     var counterColor: UIColor = UIColor.red
     
     override func draw(_ rect: CGRect) {
-        let center = CGPoint(x:bounds.width/2, y: bounds.height/2)
-        let radius: CGFloat = max(bounds.width, bounds.height)
-        let arcWidth: CGFloat = 15
-        let startAngle: CGFloat = 0
-        let endAngle: CGFloat = π * 2
+        
+        let center = CGPoint(x:18, y: 75)
+        let startAngle: CGFloat = 7 * π / 4
+        let endAngle: CGFloat = 5 * π / 4
+        
+        let path = UIBezierPath(roundedRect: CGRect(x: 10, y: 10, width:16, height: 75), cornerRadius: 8)
+        UIColor.black.setStroke()
+        path.lineWidth = 2
+        path.stroke()
+        
+        let path2 = UIBezierPath(arcCenter: center,
+                                 radius: 12,
+                                 startAngle: startAngle,
+                                 endAngle: endAngle,
+                                 clockwise: true)
+        UIColor.black.setStroke()
+        path2.lineWidth = 2
+        path2.stroke()
+        
+        let path4 = UIBezierPath(arcCenter: center,
+                                 radius: 11,
+                                 startAngle: startAngle,
+                                 endAngle: endAngle,
+                                 clockwise: true)
+
+        path4.move(to: center)
+        path4.lineWidth = 24
+        #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).setFill()
+        path4.fill()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1), execute: { ()  in
             
-            let path = UIBezierPath(arcCenter: center,
-                                    radius: radius/2 - arcWidth/2,
-                                    startAngle: startAngle,
-                                    endAngle: endAngle,
-                                    clockwise: true)
-            
-            path.lineWidth = arcWidth
-            
-            path.stroke()
-            
-            
-            self.shapeLayer.path = path.cgPath
+        
+            let path3 = UIBezierPath()
+            path3.move(to: CGPoint(x: 18, y: 75))
+            path3.addLine(to: CGPoint(x: 18, y: 20))
+            UIColor.red.setStroke()
+            path3.lineWidth = 21
+            path3.stroke()
+            self.shapeLayer.path = path3.cgPath
             self.shapeLayer.bounds = self.layer.bounds
-            self.shapeLayer.strokeColor = self.counterColor.cgColor
-            self.shapeLayer.lineWidth = arcWidth
+            self.shapeLayer.strokeColor = #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).cgColor
+            self.shapeLayer.lineWidth = 15
+            self.shapeLayer.lineCap = kCALineJoinRound
             self.shapeLayer.position = CGPoint(x: 75, y:75)
             self.shapeLayer.fillColor = nil
             self.layer.addSublayer(self.shapeLayer)
-            let gradient = CAGradientLayer()
-            gradient.frame = path.bounds
-            gradient.bounds = self.layer.bounds
             
-            gradient.position = CGPoint(x: 75, y:75)
-            gradient.colors = [UIColor.purple.cgColor,UIColor.blue.cgColor, #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1).cgColor , UIColor.white.cgColor, UIColor.yellow.cgColor,UIColor.orange.cgColor, UIColor.red.cgColor]
             
-            gradient.mask = self.shapeLayer
             
-            self.layer.addSublayer(gradient)
             let animation = CABasicAnimation(keyPath: "strokeEnd")
             animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            animation.duration = 3
+            animation.duration = 2
             animation.fromValue = 0
-            animation.toValue = 1
+            animation.toValue = 0.6
+            animation.fillMode = kCAFillModeForwards
+            animation.isRemovedOnCompletion = false
             self.shapeLayer.add(animation, forKey: "strokeEnd")
             
         })
