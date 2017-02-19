@@ -9,14 +9,17 @@
 import UIKit
 
 class WeatherData : WeatherDataInterface {
-    
+
+    // MARK: - Parameters
     private var parser : WeatherParserInterface
     private let session = URLSession(configuration: .default)
     
+    // MARK: - Life Cycle
     init(parser: WeatherParserInterface) {
         self.parser = parser
     }
     
+    // MARK: - Extra functions
     private func getWeatherData(url: URL, completionHandler: @escaping (_ data: Data) -> Void ) {
         let dataTask = session.dataTask(with: url, completionHandler: { (data, response, error) in
             if let error = error {
@@ -28,13 +31,14 @@ class WeatherData : WeatherDataInterface {
             }
         })
         dataTask.resume()
-        
     }
     
+    // MARK: - WeatherDataInterface
     func getCurrentWeatherFor(latitude: Double, longitude: Double, completionHandler: @escaping (_ conditions: WeatherCondition) -> Void ) {
         let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&units=metric&mode=xml&APPID=ba22ef4840c7fcb08a7a7b92bf80d1fc")
         getWeatherData(url: url!) { (data) in
-            completionHandler(self.parser.getWeatherConditionsFor(data: data))
+            let conditions = self.parser.getWeatherConditionsFor(data: data)
+            completionHandler(conditions)
         }
         
     }

@@ -15,58 +15,110 @@ import MapKit
     let initialLatitude = 49.2327800
     let initialLongitude = 28.4809700
     let locationManager = CLLocationManager()
-    let temperatureOverlay = MKTileOverlay(urlTemplate: "http://maps.owm.io:8099/5735d67f5836286b007625cd/{z}/{x}/{y}?hash=ba22ef4840c7fcb08a7a7b92bf80d1fc")
     let transition = DetailViewAnimator()
-    
-    lazy var selectedPointCoordinates : CLLocationCoordinate2D = {
-        return CLLocationCoordinate2D(latitude: self.initialLatitude, longitude: self.initialLongitude)
-    }()
+    var currentOverlay = MKTileOverlay()
+    var mapOverlay = MKTileOverlay()
     
     // MARK: - IBOutlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var infoView: UIView!
-    @IBOutlet weak var changeMapSegment: UISegmentedControl!
     @IBOutlet weak var navigationBar: UINavigationBar!
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        infoView.layer.backgroundColor = UIColor(white: 0, alpha: 0).cgColor
-        
-        navigationItem.titleView = changeMapSegment
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        
         let initialLocation = CLLocation(latitude: initialLatitude, longitude: initialLongitude)
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, 1000000, 1000000)
         mapView.setRegion(coordinateRegion, animated: true)
         mapView.delegate = self
         
+        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as! DetailViewController
+        detailController.transitioningDelegate = self
+        detailController.modalPresentationStyle = .overCurrentContext
+        detailController.pointCoordinates = CLLocationCoordinate2D(latitude: initialLatitude, longitude: initialLongitude)
+        present(detailController, animated: true, completion: nil)
     }
     
     // MARK: - IBActions
     @IBAction func handleTap(_ sender: UILongPressGestureRecognizer) {
+        
         let location = sender.location(in: mapView)
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as? DetailViewController
-        
-        detailController?.transitioningDelegate = self
-        detailController?.modalPresentationStyle = .overCurrentContext
-        detailController?.pointCoordinates = coordinate
-        present(detailController!, animated: true, completion: nil)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinate, 1000000, 1000000)
+        mapView.setRegion(coordinateRegion, animated: true)
+        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as! DetailViewController
+        detailController.transitioningDelegate = self
+        detailController.modalPresentationStyle = .overCurrentContext
+        detailController.pointCoordinates = coordinate
+        present(detailController, animated: true, completion: nil)
     }
     
-    @IBAction func mapChanges(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 1 {
-            mapView.add(temperatureOverlay)
-            infoView.isHidden = false
-        } else {
-            mapView.remove(temperatureOverlay)
-            infoView.isHidden = true
+    @IBAction func unwindToMap(segue: UIStoryboardSegue) {
+        let sourceController = segue.source as! MenuTableViewController
+        setOverlay(option: sourceController.selectedOption)
+    }
+    
+    // MARK: - Extra functions
+    func setOverlay(option : String) {
+        switch option {
+        case "Temperature":
+            if currentOverlay.urlTemplate != temperatureUrl {
+                mapView.remove(currentOverlay)
+                currentOverlay = MKTileOverlay(urlTemplate: temperatureUrl)
+                mapView.add(currentOverlay)
+            }
+        case "Wind speed":
+            if currentOverlay.urlTemplate != windSpeedUrl {
+                mapView.remove(currentOverlay)
+                currentOverlay = MKTileOverlay(urlTemplate: windSpeedUrl)
+                mapView.add(currentOverlay)
+            }
+        case "Precipitation":
+            if currentOverlay.urlTemplate != precipitationUrl {
+                mapView.remove(currentOverlay)
+                currentOverlay = MKTileOverlay(urlTemplate: precipitationUrl)
+                mapView.add(currentOverlay)
+            }
+        case "Pressure":
+            if currentOverlay.urlTemplate != pressureUrl {
+                mapView.remove(currentOverlay)
+                currentOverlay = MKTileOverlay(urlTemplate: pressureUrl)
+                mapView.add(currentOverlay)
+            }
+        case "Open street map":
+            if mapOverlay.urlTemplate != openStreetUrl {
+                mapView.remove(mapOverlay)
+                mapOverlay = MKTileOverlay(urlTemplate: openStreetUrl)
+                mapOverlay.canReplaceMapContent = true
+                mapView.add(mapOverlay)
+            }
+        case "Google map":
+            if mapOverlay.urlTemplate != googleMapUrl {
+                mapView.remove(mapOverlay)
+                mapOverlay = MKTileOverlay(urlTemplate: googleMapUrl)
+                mapOverlay.canReplaceMapContent = true
+                mapView.add(mapOverlay)
+            }
+        case "Test polygon":
+            let unsafePoints = UnsafeMutablePointer<CLLocationCoordinate2D>.allocate(capacity: 3)
+            unsafePoints[0] = CLLocationCoordinate2D(latitude: 33.2, longitude: 28.5)
+            unsafePoints[1] = CLLocationCoordinate2D(latitude: 51.3, longitude: 40.4)
+            unsafePoints[2] = CLLocationCoordinate2D(latitude: 55.3, longitude: 30.1)
+            let polygon = MKPolygon(coordinates: unsafePoints, count: 3)
+            unsafePoints.deallocate(capacity: 3)
+            polygon.title = "Test polygon"
+            
+            mapView.add(polygon)
+        case "Default":
+            mapView.remove(mapOverlay)        
+        default:
+            break
         }
     }
 }
@@ -77,6 +129,11 @@ extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let overlay = overlay as? MKTileOverlay {
             let render = MKTileOverlayRenderer(tileOverlay: overlay)
+            return render
+        } else if let overlay = overlay as? MKPolygon {
+            let render = MKPolygonRenderer(polygon: overlay)
+            render.strokeColor = UIColor.red
+            render.lineWidth = 5
             return render
         }
         return MKOverlayRenderer()

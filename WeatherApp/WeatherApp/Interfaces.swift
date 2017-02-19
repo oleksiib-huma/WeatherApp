@@ -8,21 +8,12 @@
 
 import UIKit
 
-struct WeatherCondition {
-    
-    var sunrise : String = ""
-    var sunset : String = ""
-    var temperature : Double?
-    var humidity: Int?
-    var pressure: Double?
-    var windSpeed : Double?
-    var windName : String = ""
-    var windDirection : String = ""
-    var clouds : String = ""
-    var weather : String = ""
-    var weatherIcon : UIImage?
-    
-}
+let temperatureUrl = "http://maps.owm.io:8099/5735d67f5836286b007625cd/{z}/{x}/{y}?hash=ba22ef4840c7fcb08a7a7b92bf80d1fc"
+let precipitationUrl = "http://f.maps.owm.io:8099/57456d1237fb4e01009cbb17/{z}/{x}/{y}?hash=ba22ef4840c7fcb08a7a7b92bf80d1fc"
+let windSpeedUrl = "http://a.maps.owm.io:8099/5735d67f5836286b0076267b/{z}/{x}/{y}?hash=ba22ef4840c7fcb08a7a7b92bf80d1fc"
+let pressureUrl = "http://a.maps.owm.io:8099/5837ee50f77ebe01008ef68d/{z}/{x}/{y}?hash=ba22ef4840c7fcb08a7a7b92bf80d1fc"
+let openStreetUrl = "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+let googleMapUrl = "http://mt0.google.com/vt/x={x}&y={y}&z={z}"
 
 enum Day: String {
     case Monday = "Monday"

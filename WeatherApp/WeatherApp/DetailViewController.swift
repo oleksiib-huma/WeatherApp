@@ -19,6 +19,11 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
+    @IBOutlet weak var weatherImageView: UIImageView!
+    @IBOutlet weak var windLabel: UILabel!
+    @IBOutlet weak var humidityLabel: UILabel!
+    @IBOutlet weak var presureLabel: UILabel!
+    @IBOutlet weak var temperatureView: ThermometerView!
     
     // MARK: - IBAction
     @IBAction func tap(_ sender: UITapGestureRecognizer) {
@@ -28,19 +33,34 @@ class DetailViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        // animation for geocoding
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut )
         animation.type = kCATransitionPush
         animation.duration = 1.5
-        let geocoder = CLGeocoder()
         
         let weatherData = WeatherData(parser: XmlWeatherParser())
-        
         weatherData.getCurrentWeatherFor(latitude: pointCoordinates.latitude, longitude: pointCoordinates.longitude) { (conditions) in
+            
+            conditions.iconDownloadCompletion = { (image) in
+                DispatchQueue.main.async {
+                    self.weatherImageView.image = image
+                }
+            }
+            
             DispatchQueue.main.async {
+                self.temperatureView.animateTemperature(value: conditions.temperature!)
                 self.temperatureLabel.text = String(format: "%g°C", conditions.temperature!)
+                self.humidityLabel.text = self.humidityLabel.text! + String(format: "%d%%", conditions.humidity!)
+                self.presureLabel.text = self.presureLabel.text! + conditions.pressure
+                self.windLabel.text = self.windLabel.text! + String(format: "%@, %g m/s, %@", conditions.windName, conditions.windSpeed!, conditions.windDirection)
             }
         }
-        
+        geocodeLocation()
+    }
+    
+    // MARK: - Extra functions
+    func geocodeLocation() {
+        let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(CLLocation(latitude: pointCoordinates.latitude, longitude: pointCoordinates.longitude), completionHandler: { (data, error) in
             if let error = error {
                 print("geocode error: \(error.localizedDescription)")
@@ -55,7 +75,6 @@ class DetailViewController: UIViewController {
                 }
             }
         })
-        
     }
     
 }

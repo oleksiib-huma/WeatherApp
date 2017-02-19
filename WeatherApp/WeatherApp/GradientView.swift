@@ -10,6 +10,7 @@ import UIKit
 
 @IBDesignable class GradientView: UIView {
     
+    // MARK: - View Life Cycle
     override func draw(_ rect: CGRect) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
