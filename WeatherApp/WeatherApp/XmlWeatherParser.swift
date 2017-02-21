@@ -22,8 +22,12 @@ class XmlWeatherParser: NSObject, WeatherParserInterface {
     }
     
     // MARK: - Extra functions
-    fileprivate func  downloadConditionImage(stringUrl : String) {
-        guard let urlAllowed = stringUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+    /**
+     Asynchronously downloads weather condition image
+      - Parameter urlTemplate: string url for downloading weather image
+     */
+    fileprivate func  downloadConditionImage(urlTemplate : String) {
+        guard let urlAllowed = urlTemplate.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
         let url = URL(string: urlAllowed) else {
             print("Not valid URL")
             return
@@ -59,7 +63,7 @@ extension XmlWeatherParser: XMLParserDelegate {
         case "weather":
             if let icon = attributeDict["icon"] {
                 let iconUrl = "http://openweathermap.org/img/w/\(icon).png"
-                downloadConditionImage(stringUrl: iconUrl)
+                downloadConditionImage(urlTemplate: iconUrl)
             }
         case "clouds":
             if let clouds = attributeDict["name"] {
@@ -67,10 +71,11 @@ extension XmlWeatherParser: XMLParserDelegate {
             }
         case "sun":
             if let rise = attributeDict["rise"] {
-                conditions.sunrise = rise
+                conditions.sunrise = rise[rise.index(rise.startIndex, offsetBy: 11)...rise.index(rise.endIndex, offsetBy: -4)]
             }
             if let set = attributeDict["set"] {
-                conditions.sunset = set
+                conditions.sunset = set[set.index(set.startIndex, offsetBy: 11)...set.index(set.endIndex, offsetBy: -4)]
+
             }
         case "humidity":
             if let humidity = attributeDict["value"] {
@@ -90,6 +95,14 @@ extension XmlWeatherParser: XMLParserDelegate {
         case "direction":
             if let direction = attributeDict["name"] {
                 conditions.windDirection = direction
+            }
+        case "clouds":
+            if let cloudsName = attributeDict["name"] {
+                conditions.clouds = cloudsName
+            }
+        case "precipitation":
+            if let precipitation = attributeDict["mode"] {
+                conditions.precipitation = precipitation
             }
         default:
             break

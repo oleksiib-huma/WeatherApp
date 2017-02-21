@@ -14,11 +14,13 @@ class DetailViewAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     let duration = 1.0
     var originFrame = CGRect.zero
     
+    // MARK: - UIViewControllerAnimatedTransitioning
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        
         let containerView = transitionContext.containerView
         let detailView = transitionContext.view(forKey: .to)
         let initialFrame = originFrame
@@ -40,6 +42,4 @@ class DetailViewAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             transitionContext.completeTransition(true)
         }
     }
-    
-
 }

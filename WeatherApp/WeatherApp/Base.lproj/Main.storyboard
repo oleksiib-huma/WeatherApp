@@ -90,11 +90,6 @@
                                             <constraint firstAttribute="width" constant="90" id="ZyA-hg-vBw"/>
                                             <constraint firstItem="aX6-Gc-Ofe" firstAttribute="top" secondItem="xvR-kt-slY" secondAttribute="top" constant="20" id="aaU-sX-Wb9"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
-                                                <color key="value" red="1" green="0.1855551376" blue="0.1618173846" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zP6-gx-8BE">
                                         <rect key="frame" x="10" y="240" width="0.0" height="0.0"/>
@@ -158,8 +153,26 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="precipitation - " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NdZ-2K-aVf">
+                                        <rect key="frame" x="127" y="143.5" width="135" height="17"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="135" id="PIX-G1-uiS"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="clouds - " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oHF-99-U5s">
+                                        <rect key="frame" x="127" y="168.5" width="135" height="17"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="135" id="8L5-X7-kst"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="zP6-gx-8BE" firstAttribute="leading" secondItem="prk-L0-fSA" secondAttribute="leading" constant="10" id="1Xt-ZY-g7B"/>
                                     <constraint firstAttribute="width" constant="269" id="2TL-Yg-5yF"/>
@@ -170,9 +183,11 @@
                                     <constraint firstAttribute="height" constant="250" id="FEV-2x-6mo"/>
                                     <constraint firstItem="FYm-xF-pfI" firstAttribute="top" secondItem="prk-L0-fSA" secondAttribute="top" constant="20" id="L5k-6k-Rka"/>
                                     <constraint firstItem="FYm-xF-pfI" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="MaH-rL-qyt"/>
+                                    <constraint firstItem="oHF-99-U5s" firstAttribute="top" secondItem="NdZ-2K-aVf" secondAttribute="bottom" constant="8" id="PbD-AY-iUF"/>
                                     <constraint firstItem="xvR-kt-slY" firstAttribute="top" secondItem="prk-L0-fSA" secondAttribute="top" id="TnS-Vl-eaB"/>
                                     <constraint firstItem="Yyw-vX-6jz" firstAttribute="leading" secondItem="prk-L0-fSA" secondAttribute="leading" constant="8" id="UfJ-m0-BUN"/>
                                     <constraint firstItem="xvR-kt-slY" firstAttribute="leading" secondItem="prk-L0-fSA" secondAttribute="leading" id="W2N-6W-CDm"/>
+                                    <constraint firstItem="NdZ-2K-aVf" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="Z39-yR-NrP"/>
                                     <constraint firstItem="uqQ-0z-oq3" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="bPP-tB-OJb"/>
                                     <constraint firstItem="xvR-kt-slY" firstAttribute="leading" secondItem="prk-L0-fSA" secondAttribute="leading" id="bl2-ej-u8y"/>
                                     <constraint firstItem="uqQ-0z-oq3" firstAttribute="top" secondItem="FYm-xF-pfI" secondAttribute="bottom" constant="8" id="etr-0g-z5l"/>
@@ -180,7 +195,9 @@
                                     <constraint firstItem="2qT-WD-qQr" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="iQm-BL-zch"/>
                                     <constraint firstItem="Yyw-vX-6jz" firstAttribute="top" secondItem="xvR-kt-slY" secondAttribute="bottom" constant="20" id="jDZ-Ar-QG3"/>
                                     <constraint firstItem="YoX-cO-T2X" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="qYW-fx-F9d"/>
+                                    <constraint firstItem="NdZ-2K-aVf" firstAttribute="top" secondItem="YoX-cO-T2X" secondAttribute="bottom" constant="8" id="r8L-Wh-Oko"/>
                                     <constraint firstItem="2qT-WD-qQr" firstAttribute="top" secondItem="uqQ-0z-oq3" secondAttribute="bottom" constant="8" id="ssu-Z1-7hu"/>
+                                    <constraint firstItem="oHF-99-U5s" firstAttribute="centerX" secondItem="prk-L0-fSA" secondAttribute="centerX" constant="60" id="ttK-IJ-fvF"/>
                                     <constraint firstAttribute="bottom" secondItem="zP6-gx-8BE" secondAttribute="bottom" constant="10" id="w5Q-FF-DYz"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -202,9 +219,13 @@
                     <navigationItem key="navigationItem" title="Details" id="jAT-Ed-e9G"/>
                     <connections>
                         <outlet property="cityLabel" destination="zP6-gx-8BE" id="RDC-3l-2tK"/>
+                        <outlet property="cloudsLabel" destination="oHF-99-U5s" id="CmC-hz-Xfs"/>
                         <outlet property="countryLabel" destination="HVf-kp-kVX" id="qOg-Am-uOQ"/>
                         <outlet property="humidityLabel" destination="bQq-QJ-Ofu" id="qFu-zG-BNI"/>
+                        <outlet property="precipitationLabel" destination="NdZ-2K-aVf" id="UBb-Qw-PRT"/>
                         <outlet property="presureLabel" destination="YoX-cO-T2X" id="dex-pv-Rvq"/>
+                        <outlet property="sunRiseLabel" destination="FYm-xF-pfI" id="DD7-zG-ARR"/>
+                        <outlet property="sunSetLabel" destination="uqQ-0z-oq3" id="tXp-LK-k92"/>
                         <outlet property="temperatureLabel" destination="aX6-Gc-Ofe" id="prx-Fd-rSV"/>
                         <outlet property="temperatureView" destination="xvR-kt-slY" id="mo2-yy-xbS"/>
                         <outlet property="weatherImageView" destination="Yyw-vX-6jz" id="6Xh-Nx-5bm"/>
@@ -232,8 +253,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zX5-Wn-8hb">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zX5-Wn-8hb">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Us3-Vn-Wt2" appends="YES" id="Tod-xz-OeX"/>
@@ -324,18 +345,18 @@
                             <constraint firstItem="BP7-R0-27b" firstAttribute="top" secondItem="zZW-bQ-enx" secondAttribute="top" id="56V-MS-EPI"/>
                             <constraint firstItem="zX5-Wn-8hb" firstAttribute="leading" secondItem="zZW-bQ-enx" secondAttribute="leading" id="HZc-Yf-mAn"/>
                             <constraint firstItem="m8t-FQ-bJJ" firstAttribute="top" secondItem="oUk-Xf-zDw" secondAttribute="bottom" constant="8" id="JqI-ms-XuS"/>
-                            <constraint firstAttribute="trailing" secondItem="zX5-Wn-8hb" secondAttribute="trailing" id="NVf-la-p5F"/>
                             <constraint firstItem="zX5-Wn-8hb" firstAttribute="top" secondItem="zZW-bQ-enx" secondAttribute="top" id="U8z-Nw-cjN"/>
                             <constraint firstAttribute="trailing" secondItem="BP7-R0-27b" secondAttribute="trailing" id="UyR-27-WSu"/>
-                            <constraint firstItem="m8t-FQ-bJJ" firstAttribute="top" secondItem="zX5-Wn-8hb" secondAttribute="bottom" id="naf-4G-UjQ"/>
+                            <constraint firstItem="m8t-FQ-bJJ" firstAttribute="top" secondItem="zX5-Wn-8hb" secondAttribute="bottom" id="X7Y-8w-YYa"/>
                             <constraint firstItem="BP7-R0-27b" firstAttribute="leading" secondItem="zZW-bQ-enx" secondAttribute="leading" id="s6C-2f-ASx"/>
+                            <constraint firstAttribute="trailing" secondItem="zX5-Wn-8hb" secondAttribute="trailing" id="twh-jR-xsZ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Global Weather" id="atn-Tk-GQc">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="brv-1i-UpD">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <segue destination="QLK-yt-4w3" kind="presentation" identifier="menuSegue" id="edq-CE-uaE"/>
+                                <segue destination="QLK-yt-4w3" kind="presentation" identifier="menuSegueIdentifier" id="edq-CE-uaE"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -343,7 +364,7 @@
                         <outlet property="infoView" destination="oUk-Xf-zDw" id="Q3J-lN-Va8"/>
                         <outlet property="mapView" destination="zX5-Wn-8hb" id="CCc-PF-BR7"/>
                         <outlet property="navigationBar" destination="BP7-R0-27b" id="FM2-lE-ULw"/>
-                        <segue destination="nlU-br-ffI" kind="presentation" identifier="detailsSegue" id="DxB-Fw-bhe"/>
+                        <segue destination="nlU-br-ffI" kind="presentation" identifier="detailsSegueIdentifier" id="DxB-Fw-bhe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="44b-LS-qqz" sceneMemberID="firstResponder"/>
@@ -353,7 +374,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1176.8115942028987" y="123.91304347826087"/>
+            <point key="canvasLocation" x="1176.8" y="123.68815592203899"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Y0r-ld-s2k">

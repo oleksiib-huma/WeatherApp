@@ -73,9 +73,9 @@
 			isa = PBXGroup;
 			children = (
 				48E541A21E547F5000FDE665 /* AppDelegate.swift */,
+				48485B841E58BBFF004BA979 /* Interfaces.swift */,
 				48E541A91E547F5000FDE665 /* Assets.xcassets */,
 				48E541AE1E547F5000FDE665 /* Info.plist */,
-				48485B841E58BBFF004BA979 /* Interfaces.swift */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -87,9 +87,9 @@
 				48E9B8D21E5639E1002175ED /* GradientView.swift */,
 				48E9B8CA1E563832002175ED /* DetailViewAnimator.swift */,
 				48CD9B4E1E5C9DC200F28CBE /* MenuViewAnimator.swift */,
+				48C466D81E59E42800A891AF /* CustomMenuCell.swift */,
 				48E541A61E547F5000FDE665 /* Main.storyboard */,
 				48E541AB1E547F5000FDE665 /* LaunchScreen.storyboard */,
-				48C466D81E59E42800A891AF /* CustomMenuCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";

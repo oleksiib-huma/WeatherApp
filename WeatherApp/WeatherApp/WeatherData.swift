@@ -19,7 +19,16 @@ class WeatherData : WeatherDataInterface {
         self.parser = parser
     }
     
+    convenience init() {
+        self.init(parser: XmlWeatherParser())
+    }
+    
     // MARK: - Extra functions
+    /**
+     Downloads weather data
+      - Parameters url: url for downloading weather data
+      - Paramaters completionHandler: completion for handling downloading finish
+     */
     private func getWeatherData(url: URL, completionHandler: @escaping (_ data: Data) -> Void ) {
         let dataTask = session.dataTask(with: url, completionHandler: { (data, response, error) in
             if let error = error {

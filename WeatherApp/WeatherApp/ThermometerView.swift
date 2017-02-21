@@ -8,12 +8,12 @@
 
 import UIKit
 
-@IBDesignable class ThermometerView: UIView {
+class ThermometerView: UIView {
     
     // MARK: - Parameters
     let temperature : Double? = nil
-    private let pi = CGFloat(M_PI)
     let shapeLayer = CAShapeLayer()
+    private let pi = CGFloat(M_PI)
     
     // MARK: - View Life Cycle
     override func draw(_ rect: CGRect) {
@@ -21,39 +21,48 @@ import UIKit
         let startAngle: CGFloat = 7 * pi / 4
         let endAngle: CGFloat = 5 * pi / 4
         
-        let path1 = UIBezierPath(roundedRect: CGRect(x: 10, y: 10, width:16, height: 75), cornerRadius: 8)
+        /// thermomether top bulb
+        let bulbPath = UIBezierPath(roundedRect: CGRect(x: 10, y: 10, width:16, height: 75), cornerRadius: 8)
         UIColor.black.setStroke()
-        path1.lineWidth = 2
-        path1.stroke()
+        bulbPath.lineWidth = 2
+        bulbPath.stroke()
         
-        let path2 = UIBezierPath(arcCenter: center,
+        /// thermomether bottom circle bulb
+        let circlePath = UIBezierPath(arcCenter: center,
                                  radius: 12,
                                  startAngle: startAngle,
                                  endAngle: endAngle,
                                  clockwise: true)
         UIColor.black.setStroke()
-        path2.lineWidth = 2
-        path2.stroke()
+        circlePath.lineWidth = 2
+        circlePath.stroke()
         
-        let path3 = UIBezierPath(arcCenter: center,
+        /// thermomether bottom fill bulb
+        let circleFillPath = UIBezierPath(arcCenter: center,
                                  radius: 11,
                                  startAngle: startAngle,
                                  endAngle: endAngle,
                                  clockwise: true)
-        path3.move(to: center)
-        path3.lineWidth = 24
+        circleFillPath.move(to: center)
+        circleFillPath.lineWidth = 24
         UIColor.blue.setFill()
-        path3.fill()
+        circleFillPath.fill()
     }
     
     // MARK: - Extra functions
+    /**
+     Animates temperature mercury rasing
+      - Parameter value: temperature for mercury rising animation
+     */
     func animateTemperature(value: Double) {
+        /// thermomether temperature rise path
         let fillPath = UIBezierPath()
         fillPath.move(to: CGPoint(x: 18, y: 75))
         fillPath.addLine(to: CGPoint(x: 18, y: 20))
         UIColor.red.setStroke()
         fillPath.lineWidth = 21
         fillPath.stroke()
+
         self.shapeLayer.path = fillPath.cgPath
         self.shapeLayer.bounds = self.layer.bounds
         self.shapeLayer.strokeColor = #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).cgColor
@@ -62,6 +71,7 @@ import UIKit
         self.shapeLayer.position = CGPoint(x: 45, y:45)
         self.shapeLayer.fillColor = nil
         self.layer.addSublayer(self.shapeLayer)
+        
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = fillPath.bounds
         gradientLayer.bounds = self.shapeLayer.bounds
@@ -71,6 +81,7 @@ import UIKit
         gradientLayer.colors = [UIColor.blue.cgColor, UIColor.blue.cgColor, #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).cgColor, UIColor.red.cgColor]
         gradientLayer.mask = self.shapeLayer
         self.layer.addSublayer(gradientLayer)
+        
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         animation.duration = 2

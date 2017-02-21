@@ -9,30 +9,9 @@
 import UIKit
 import MapKit
 
-public extension UIView {
-    
-    public func snapshotImage() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0)
-        drawHierarchy(in: bounds, afterScreenUpdates: false)
-        let snapshotImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return snapshotImage
-    }
-    
-    public func snapshotView() -> UIView? {
-        if let snapshotImage = snapshotImage() {
-            return UIImageView(image: snapshotImage)
-        } else {
-            return nil
-        }
-    }
-}
-
 @IBDesignable class ViewController: UIViewController {
     
     // MARK: - Parameters
-    let initialLatitude = 49.2327800
-    let initialLongitude = 28.4809700
     let locationManager = CLLocationManager()
     let transition = DetailViewAnimator()
     let menuTransition = MenuViewAnimator()
@@ -49,46 +28,39 @@ public extension UIView {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        
-        let initialLocation = CLLocation(latitude: initialLatitude, longitude: initialLongitude)
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, 1000000, 1000000)
-        mapView.setRegion(coordinateRegion, animated: true)
+        centerMap(latitude: kInitialMapLatitude, longitude: kInitialMapLongitude)
         mapView.delegate = self
         
-        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as! DetailViewController
-        detailController.transitioningDelegate = self
-        detailController.modalPresentationStyle = .overCurrentContext
-        detailController.pointCoordinates = CLLocationCoordinate2D(latitude: initialLatitude, longitude: initialLongitude)
-        present(detailController, animated: true, completion: nil)
-    }
+        }
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "detailsSegue" {
+        if segue.identifier == "detailsSegueIdentifier" {
             if let detailController = segue.destination as? DetailViewController {
                 detailController.transitioningDelegate = self
                 detailController.modalPresentationStyle = .overCurrentContext
                 detailController.pointCoordinates = tapCoordinates
             }
-        } else if segue.identifier == "menuSegue" {
+        } else if segue.identifier == "menuSegueIdentifier" {
             if let menuController = segue.destination as? MenuTableViewController {
+                menuController.modalPresentationStyle = .custom
                 menuController.transitioningDelegate = menuTransition
-                menuController.modalPresentationStyle = .overCurrentContext
             }
         }
     }
     
     // MARK: - IBActions
+    /// User tap handler
     @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
         
         let location = sender.location(in: mapView)
         tapCoordinates = mapView.convert(location, toCoordinateFrom: mapView)
-        let centerCordinates = CLLocationCoordinate2D(latitude: tapCoordinates.latitude + 3, longitude: tapCoordinates.longitude)
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(centerCordinates, 1000000, 1000000)
+    
+        centerMap(latitude: tapCoordinates.latitude + 3, longitude: tapCoordinates.longitude)
         
         if let tapAnnotation  = self.tapAnnotation {
             mapView.removeAnnotation(tapAnnotation)
@@ -97,17 +69,30 @@ public extension UIView {
         tapAnnotation = WeatherCustomAnnotation(coordinate: tapCoordinates)
         mapView.addAnnotation(tapAnnotation!)
         
-        mapView.setRegion(coordinateRegion, animated: true)
-        performSegue(withIdentifier: "detailsSegue", sender: nil)
+        performSegue(withIdentifier: "detailsSegueIdentifier", sender: nil)
     }
     
     @IBAction func unwindToMap(segue: UIStoryboardSegue) {
         let sourceController = segue.source as! MenuTableViewController
         setOverlay(option: sourceController.selectedOption)
-        sourceController.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Extra functions
+    /**
+     Centers map with input latitude and longitude
+     - parameter latitude: maps center latitude
+     - parameter longitude: maps center longitude
+    */
+    func centerMap(latitude : Double, longitude: Double) {
+        let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinates, kMapScale, kMapScale)
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
+    
+    /**
+     Adds tile with appropriate url template
+     - parameter urlTemplate: valid string url template for map tiles, if nil removes all tiles
+     */
     func addMapTile(urlTemplate: String?) {
         guard let urlTemplate = urlTemplate else {
             mapView.remove(currentOverlay)
@@ -118,9 +103,14 @@ public extension UIView {
             mapView.remove(currentOverlay)
             currentOverlay = MKTileOverlay(urlTemplate: urlTemplate)
             mapView.add(currentOverlay)
+            infoView.isHidden = true
         }
     }
     
+    /**
+     Adds maps tile with appropriate url template that replace current map
+     - parameter urlTemplate: valid string url template for map tiles, if nil sets default map
+     */
     func replaceMap(urlTemplate: String?) {
         guard let urlTemplate = urlTemplate else {
             mapView.remove(mapOverlay)
@@ -135,22 +125,27 @@ public extension UIView {
         }
     }
     
+    /**
+     Sets maps overlay with option
+     - parameter option: map overlay option 
+     */
     func setOverlay(option : MapsOptions) {
         switch option {
         case .NoneTile:
             addMapTile(urlTemplate: nil)
         case .TemperatureTile:
-            addMapTile(urlTemplate: temperatureUrl)
+            addMapTile(urlTemplate: kTemperatureUrlTemplate)
+            infoView.isHidden = false
         case .WindSpeedTile:
-            addMapTile(urlTemplate: windSpeedUrl)
+            addMapTile(urlTemplate: kWindSpeedUrlTemplate)
         case .PrecipitationTile:
-            addMapTile(urlTemplate: precipitationUrl)
+            addMapTile(urlTemplate: kPrecipitationUrlTemplate)
         case .PressureTile:
-            addMapTile(urlTemplate: pressureUrl)
+            addMapTile(urlTemplate: kPressureUrlTemplate)
         case .OpenStreetMap:
-            replaceMap(urlTemplate: openStreetUrl)
+            replaceMap(urlTemplate: kOpenStreetUrlTemplate)
         case .GoogleMap:
-            replaceMap(urlTemplate: googleMapUrl)
+            replaceMap(urlTemplate: kGoogleMapUrlTemplate)
         case .DefaultMap:
             replaceMap(urlTemplate: nil)
         default:
@@ -203,16 +198,17 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let currentCoordinate = locations[0].coordinate
-        let latitude = currentCoordinate.latitude
-        let longitude = currentCoordinate.longitude
+        tapCoordinates = CLLocationCoordinate2D(latitude: currentCoordinate.latitude,
+                                                longitude: currentCoordinate.longitude)
         self.locationManager.stopUpdatingLocation()
+        if let tapAnnotation  = self.tapAnnotation {
+            mapView.removeAnnotation(tapAnnotation)
+        }
         
-        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as? DetailViewController
-        
-        detailController?.transitioningDelegate = self
-        detailController?.modalPresentationStyle = .overCurrentContext
-        detailController?.pointCoordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        present(detailController!, animated: true, completion: nil)
+        tapAnnotation = WeatherCustomAnnotation(coordinate: tapCoordinates)
+        mapView.addAnnotation(tapAnnotation!)
+        centerMap(latitude: tapCoordinates.latitude, longitude: tapCoordinates.longitude)
+        performSegue(withIdentifier: "detailsSegueIdentifier", sender: nil)
         
     }
 }

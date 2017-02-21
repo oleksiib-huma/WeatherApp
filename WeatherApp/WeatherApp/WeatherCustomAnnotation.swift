@@ -11,8 +11,10 @@ import MapKit
 
 class WeatherCustomAnnotation: NSObject,  MKAnnotation {
     
+    // MARK: - Parameters
     var coordinate: CLLocationCoordinate2D
     
+    // MARK: - Life cycle
     init(coordinate: CLLocationCoordinate2D) {
         self.coordinate = coordinate
     }

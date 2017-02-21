@@ -9,6 +9,8 @@
 import UIKit
 
 class WeatherCondition {
+    
+    // MARK: - Parameters
     var sunrise : String = ""
     var sunset : String = ""
     var temperature : Double?
@@ -18,6 +20,9 @@ class WeatherCondition {
     var windName : String = ""
     var windDirection : String = ""
     var clouds : String = ""
+    var precipitation : String = ""
     var weatherIcon : UIImage?
+    /// completion for weather image downloading
     var iconDownloadCompletion : ((UIImage?) -> Void)?
+    
 }
