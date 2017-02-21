@@ -207,7 +207,7 @@ extension ViewController: CLLocationManagerDelegate {
         
         tapAnnotation = WeatherCustomAnnotation(coordinate: tapCoordinates)
         mapView.addAnnotation(tapAnnotation!)
-        centerMap(latitude: tapCoordinates.latitude, longitude: tapCoordinates.longitude)
+        centerMap(latitude: tapCoordinates.latitude + 3, longitude: tapCoordinates.longitude)
         performSegue(withIdentifier: "detailsSegueIdentifier", sender: nil)
         
     }
