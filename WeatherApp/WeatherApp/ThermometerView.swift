@@ -42,9 +42,8 @@ import UIKit
                                  clockwise: true)
         path3.move(to: center)
         path3.lineWidth = 24
-        #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).setFill()
+        UIColor.blue.setFill()
         path3.fill()
-        
     }
     
     // MARK: - Extra functions
@@ -60,9 +59,18 @@ import UIKit
         self.shapeLayer.strokeColor = #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).cgColor
         self.shapeLayer.lineWidth = 15
         self.shapeLayer.lineCap = kCALineJoinRound
-        self.shapeLayer.position = CGPoint(x: 50, y:50)
+        self.shapeLayer.position = CGPoint(x: 45, y:45)
         self.shapeLayer.fillColor = nil
         self.layer.addSublayer(self.shapeLayer)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = fillPath.bounds
+        gradientLayer.bounds = self.shapeLayer.bounds
+        gradientLayer.position = CGPoint(x: 45, y:45)
+        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.colors = [UIColor.blue.cgColor, UIColor.blue.cgColor, #colorLiteral(red: 0.9090855013, green: 0.02552536813, blue: 0, alpha: 1).cgColor, UIColor.red.cgColor]
+        gradientLayer.mask = self.shapeLayer
+        self.layer.addSublayer(gradientLayer)
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         animation.duration = 2

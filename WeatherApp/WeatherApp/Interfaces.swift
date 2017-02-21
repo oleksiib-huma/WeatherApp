@@ -15,14 +15,20 @@ let pressureUrl = "http://a.maps.owm.io:8099/5837ee50f77ebe01008ef68d/{z}/{x}/{y
 let openStreetUrl = "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
 let googleMapUrl = "http://mt0.google.com/vt/x={x}&y={y}&z={z}"
 
-enum Day: String {
-    case Monday = "Monday"
-    case Thusday = "Thusday"
-    case Wednesday = "Wednesday"
-    case Thursday = "Thursday"
-    case Friday = "Friday"
-    case Saturday = "Saturday"
-    case Sunday = "Sunday"
+private let alerts = ["Test polygon"]
+
+enum MapsOptions: String {
+    case DefaultMap = "Default"
+    case GoogleMap = "Google map"
+    case OpenStreetMap = "Open street map"
+    case NoneTile = "None"
+    case TemperatureTile = "Temperature"
+    case WindSpeedTile = "Wind speed"
+    case PrecipitationTile = "Precipitation"
+    case PressureTile = "Pressure"
+    case NoneAnnotations = "Clean"
+    case CitiesAnnotations = "Cities Annotations"
+    static let allValues = [ DefaultMap, GoogleMap, OpenStreetMap, TemperatureTile, WindSpeedTile, PrecipitationTile, PressureTile, CitiesAnnotations]
 }
 
 protocol WeatherParserInterface {

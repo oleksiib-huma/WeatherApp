@@ -13,6 +13,8 @@
 		48C466D91E59E42800A891AF /* CustomMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C466D81E59E42800A891AF /* CustomMenuCell.swift */; };
 		48C466DB1E59E93200A891AF /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C466DA1E59E93200A891AF /* MenuTableViewController.swift */; };
 		48C466E11E5A3CF700A891AF /* WeatherCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C466E01E5A3CF700A891AF /* WeatherCondition.swift */; };
+		48CD9B4D1E5C8A3E00F28CBE /* WeatherCustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CD9B4C1E5C8A3E00F28CBE /* WeatherCustomAnnotation.swift */; };
+		48CD9B4F1E5C9DC200F28CBE /* MenuViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CD9B4E1E5C9DC200F28CBE /* MenuViewAnimator.swift */; };
 		48E541A31E547F5000FDE665 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E541A21E547F5000FDE665 /* AppDelegate.swift */; };
 		48E541A51E547F5000FDE665 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E541A41E547F5000FDE665 /* ViewController.swift */; };
 		48E541A81E547F5000FDE665 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48E541A61E547F5000FDE665 /* Main.storyboard */; };
@@ -31,6 +33,8 @@
 		48C466D81E59E42800A891AF /* CustomMenuCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMenuCell.swift; sourceTree = "<group>"; };
 		48C466DA1E59E93200A891AF /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuTableViewController.swift; path = ../MenuTableViewController.swift; sourceTree = "<group>"; };
 		48C466E01E5A3CF700A891AF /* WeatherCondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherCondition.swift; sourceTree = "<group>"; };
+		48CD9B4C1E5C8A3E00F28CBE /* WeatherCustomAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherCustomAnnotation.swift; sourceTree = "<group>"; };
+		48CD9B4E1E5C9DC200F28CBE /* MenuViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewAnimator.swift; sourceTree = "<group>"; };
 		48E5419F1E547F5000FDE665 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48E541A21E547F5000FDE665 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48E541A41E547F5000FDE665 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +86,7 @@
 				48E9B8D01E5639AB002175ED /* ThermometerView.swift */,
 				48E9B8D21E5639E1002175ED /* GradientView.swift */,
 				48E9B8CA1E563832002175ED /* DetailViewAnimator.swift */,
+				48CD9B4E1E5C9DC200F28CBE /* MenuViewAnimator.swift */,
 				48E541A61E547F5000FDE665 /* Main.storyboard */,
 				48E541AB1E547F5000FDE665 /* LaunchScreen.storyboard */,
 				48C466D81E59E42800A891AF /* CustomMenuCell.swift */,
@@ -92,6 +97,7 @@
 		48C466DF1E5A3C8B00A891AF /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				48CD9B4C1E5C8A3E00F28CBE /* WeatherCustomAnnotation.swift */,
 				48C466E01E5A3CF700A891AF /* WeatherCondition.swift */,
 				48485B861E58BC4E004BA979 /* WeatherData.swift */,
 				48485B8A1E58BCAB004BA979 /* XmlWeatherParser.swift */,
@@ -203,7 +209,9 @@
 				48E9B8D11E5639AB002175ED /* ThermometerView.swift in Sources */,
 				48E9B8CB1E563832002175ED /* DetailViewAnimator.swift in Sources */,
 				48E541A51E547F5000FDE665 /* ViewController.swift in Sources */,
+				48CD9B4D1E5C8A3E00F28CBE /* WeatherCustomAnnotation.swift in Sources */,
 				48C466E11E5A3CF700A891AF /* WeatherCondition.swift in Sources */,
+				48CD9B4F1E5C9DC200F28CBE /* MenuViewAnimator.swift in Sources */,
 				48E9B8D31E5639E1002175ED /* GradientView.swift in Sources */,
 				48E541A31E547F5000FDE665 /* AppDelegate.swift in Sources */,
 				48E9B8CD1E563900002175ED /* DetailViewController.swift in Sources */,

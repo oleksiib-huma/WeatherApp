@@ -9,6 +9,25 @@
 import UIKit
 import MapKit
 
+public extension UIView {
+    
+    public func snapshotImage() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0)
+        drawHierarchy(in: bounds, afterScreenUpdates: false)
+        let snapshotImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return snapshotImage
+    }
+    
+    public func snapshotView() -> UIView? {
+        if let snapshotImage = snapshotImage() {
+            return UIImageView(image: snapshotImage)
+        } else {
+            return nil
+        }
+    }
+}
+
 @IBDesignable class ViewController: UIViewController {
     
     // MARK: - Parameters
@@ -16,8 +35,11 @@ import MapKit
     let initialLongitude = 28.4809700
     let locationManager = CLLocationManager()
     let transition = DetailViewAnimator()
+    let menuTransition = MenuViewAnimator()
     var currentOverlay = MKTileOverlay()
     var mapOverlay = MKTileOverlay()
+    var tapAnnotation : WeatherCustomAnnotation? = nil
+    var tapCoordinates = CLLocationCoordinate2D()
     
     // MARK: - IBOutlets
     @IBOutlet weak var mapView: MKMapView!
@@ -45,78 +67,92 @@ import MapKit
         present(detailController, animated: true, completion: nil)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detailsSegue" {
+            if let detailController = segue.destination as? DetailViewController {
+                detailController.transitioningDelegate = self
+                detailController.modalPresentationStyle = .overCurrentContext
+                detailController.pointCoordinates = tapCoordinates
+            }
+        } else if segue.identifier == "menuSegue" {
+            if let menuController = segue.destination as? MenuTableViewController {
+                menuController.transitioningDelegate = menuTransition
+                menuController.modalPresentationStyle = .overCurrentContext
+            }
+        }
+    }
+    
     // MARK: - IBActions
-    @IBAction func handleTap(_ sender: UILongPressGestureRecognizer) {
+    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
         
         let location = sender.location(in: mapView)
-        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinate, 1000000, 1000000)
+        tapCoordinates = mapView.convert(location, toCoordinateFrom: mapView)
+        let centerCordinates = CLLocationCoordinate2D(latitude: tapCoordinates.latitude + 3, longitude: tapCoordinates.longitude)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(centerCordinates, 1000000, 1000000)
+        
+        if let tapAnnotation  = self.tapAnnotation {
+            mapView.removeAnnotation(tapAnnotation)
+        }
+        
+        tapAnnotation = WeatherCustomAnnotation(coordinate: tapCoordinates)
+        mapView.addAnnotation(tapAnnotation!)
+        
         mapView.setRegion(coordinateRegion, animated: true)
-        let detailController = storyboard?.instantiateViewController(withIdentifier: "detail") as! DetailViewController
-        detailController.transitioningDelegate = self
-        detailController.modalPresentationStyle = .overCurrentContext
-        detailController.pointCoordinates = coordinate
-        present(detailController, animated: true, completion: nil)
+        performSegue(withIdentifier: "detailsSegue", sender: nil)
     }
     
     @IBAction func unwindToMap(segue: UIStoryboardSegue) {
         let sourceController = segue.source as! MenuTableViewController
         setOverlay(option: sourceController.selectedOption)
+        sourceController.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Extra functions
-    func setOverlay(option : String) {
+    func addMapTile(urlTemplate: String?) {
+        guard let urlTemplate = urlTemplate else {
+            mapView.remove(currentOverlay)
+            currentOverlay = MKTileOverlay()
+            return
+        }
+        if currentOverlay.urlTemplate != urlTemplate {
+            mapView.remove(currentOverlay)
+            currentOverlay = MKTileOverlay(urlTemplate: urlTemplate)
+            mapView.add(currentOverlay)
+        }
+    }
+    
+    func replaceMap(urlTemplate: String?) {
+        guard let urlTemplate = urlTemplate else {
+            mapView.remove(mapOverlay)
+            mapOverlay = MKTileOverlay()
+            return
+        }
+        if mapOverlay.urlTemplate != urlTemplate {
+            mapView.remove(mapOverlay)
+            mapOverlay = MKTileOverlay(urlTemplate: urlTemplate)
+            mapOverlay.canReplaceMapContent = true
+            mapView.insert(mapOverlay, at: 0)
+        }
+    }
+    
+    func setOverlay(option : MapsOptions) {
         switch option {
-        case "Temperature":
-            if currentOverlay.urlTemplate != temperatureUrl {
-                mapView.remove(currentOverlay)
-                currentOverlay = MKTileOverlay(urlTemplate: temperatureUrl)
-                mapView.add(currentOverlay)
-            }
-        case "Wind speed":
-            if currentOverlay.urlTemplate != windSpeedUrl {
-                mapView.remove(currentOverlay)
-                currentOverlay = MKTileOverlay(urlTemplate: windSpeedUrl)
-                mapView.add(currentOverlay)
-            }
-        case "Precipitation":
-            if currentOverlay.urlTemplate != precipitationUrl {
-                mapView.remove(currentOverlay)
-                currentOverlay = MKTileOverlay(urlTemplate: precipitationUrl)
-                mapView.add(currentOverlay)
-            }
-        case "Pressure":
-            if currentOverlay.urlTemplate != pressureUrl {
-                mapView.remove(currentOverlay)
-                currentOverlay = MKTileOverlay(urlTemplate: pressureUrl)
-                mapView.add(currentOverlay)
-            }
-        case "Open street map":
-            if mapOverlay.urlTemplate != openStreetUrl {
-                mapView.remove(mapOverlay)
-                mapOverlay = MKTileOverlay(urlTemplate: openStreetUrl)
-                mapOverlay.canReplaceMapContent = true
-                mapView.add(mapOverlay)
-            }
-        case "Google map":
-            if mapOverlay.urlTemplate != googleMapUrl {
-                mapView.remove(mapOverlay)
-                mapOverlay = MKTileOverlay(urlTemplate: googleMapUrl)
-                mapOverlay.canReplaceMapContent = true
-                mapView.add(mapOverlay)
-            }
-        case "Test polygon":
-            let unsafePoints = UnsafeMutablePointer<CLLocationCoordinate2D>.allocate(capacity: 3)
-            unsafePoints[0] = CLLocationCoordinate2D(latitude: 33.2, longitude: 28.5)
-            unsafePoints[1] = CLLocationCoordinate2D(latitude: 51.3, longitude: 40.4)
-            unsafePoints[2] = CLLocationCoordinate2D(latitude: 55.3, longitude: 30.1)
-            let polygon = MKPolygon(coordinates: unsafePoints, count: 3)
-            unsafePoints.deallocate(capacity: 3)
-            polygon.title = "Test polygon"
-            
-            mapView.add(polygon)
-        case "Default":
-            mapView.remove(mapOverlay)        
+        case .NoneTile:
+            addMapTile(urlTemplate: nil)
+        case .TemperatureTile:
+            addMapTile(urlTemplate: temperatureUrl)
+        case .WindSpeedTile:
+            addMapTile(urlTemplate: windSpeedUrl)
+        case .PrecipitationTile:
+            addMapTile(urlTemplate: precipitationUrl)
+        case .PressureTile:
+            addMapTile(urlTemplate: pressureUrl)
+        case .OpenStreetMap:
+            replaceMap(urlTemplate: openStreetUrl)
+        case .GoogleMap:
+            replaceMap(urlTemplate: googleMapUrl)
+        case .DefaultMap:
+            replaceMap(urlTemplate: nil)
         default:
             break
         }
@@ -137,6 +173,27 @@ extension ViewController: MKMapViewDelegate {
             return render
         }
         return MKOverlayRenderer()
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? WeatherCustomAnnotation {
+            let identifier = "touchPin"
+            var view : MKAnnotationView
+            if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) {
+                dequeuedView.annotation = annotation
+                view = dequeuedView
+            } else {
+                view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                UIGraphicsBeginImageContext(CGSize(width: 20, height: 20))
+                #imageLiteral(resourceName: "circle").draw(in: CGRect(x: 0, y: 0, width: 20, height: 20))
+                let circleImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                view.image = circleImage
+                view.canShowCallout = false
+            }
+            return view
+        }
+        return nil
     }
     
 }
@@ -166,6 +223,10 @@ extension ViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.originFrame = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
         return transition
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return nil
     }
     
 }
